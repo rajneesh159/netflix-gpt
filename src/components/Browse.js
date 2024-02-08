@@ -1,25 +1,30 @@
-import React from 'react'
+
+import useNowPLayingMovies from '../hooks/useNowPlayingMovies'
 import Header from './Header'
-import { API_OPTIONS } from '../utils/constants'
-import { useEffect } from 'react'
+import Maincontainer from './Maincontainer'
+import SecondaryContainer from './SecondaryContainer'
+import usePopularMovies from '../hooks/usePopularMovies'
+import GptSearch from './GptSearch'
+import { useSelector } from 'react-redux'
 
 const Browse = () => {
+  //fetch data from tmdb api and update store
+  const showGptSearch = useSelector(store => store.gpt.showGptSearch);
 
-  const getNowPlayingMovies = async () => {
-    const data = await fetch("https://api.themoviedb.org/3/movie/now_playing?page-1", API_OPTIONS);
-
-    const json = await data.json();
-    console.log(json.results);
-  };
-
-  useEffect(() => {
-    getNowPlayingMovies();
-  }, [])
-
+  useNowPLayingMovies()
+  usePopularMovies()
 
   return (
     <div>
       <Header />
+      {
+        showGptSearch ? (<GptSearch />) : (<>
+          <Maincontainer />
+          <SecondaryContainer />
+        </>
+        )}
+
+
     </div>
   )
 }
